@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+{% load humanize %}
+
+<div class="main-content" id="cart">
+    <!-- main -->
+    <div id="wrapper-site">
+        <!-- breadcrumb -->
+        <nav class="breadcrumb-bg">
+            <div class="container no-index">
+                <div class="breadcrumb">
+                    <ol>
+                        <li>
+                            <a href="#">
+                                <span>Beranda</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span>Pemesanan</span>
+                            </a>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div id="content-wrapper" class="col-xs-24 col-sm-24 col-md-24 col-lg-24 onecol">
+                    <section id="main">
+                        <div class="cart-grid row">
+                            <div class="col-md-9 col-xs-12 check-info">
+                                <h1 class="title-page">Keranjang Belanja</h1>
+                                <div class="cart-container">
+                                    <div class="cart-overview js-cart">
+                                        <ul class="cart-items">
+                                            {% for item in cart %}
+                                            {% with product=item.product %}
+                                            <li class="cart-item">
+                                                <div class="product-line-grid row justify-content-between">
+                                                    <!--  product left content: image-->
+                                                    <div class="product-line-grid-left col-md-2">
+                                                        <span class="product-image media-middle">
+                                                            <a href="product-detail.html">
+                                                                <img class="img-fluid" src="{{product.gambar.url}}" alt="{{product.nama_produk}}">
+                                                            </a>
+                                                        </span>
+                                                    </div>
+                                                    <div class="product-line-grid-body col-md-6">
+                                                        <div class="product-line-info">
+                                                            <a class="label" href="product-detail.html" data-id_customization="0">{{product.nama_produk}}</a>
+                                                        </div>
+                                                        <div class="product-line-info product-price">
+                                                            <span class="value">Rp. {{item.price|intcomma}}</span>
+                                                        </div>
+                                                        <div class="product-line-info">
+                                                            <span class="label-atrr">Kategori:</span>
+                                                            <span class="value">{{product.kategori.nama}}</span>
+                                                        </div>
+                                                        <div class="product-line-info">
+                                                            <span class="label-atrr">Status:</span>
+                                                            <span class="value">Produk {{product.keterangan_barang}}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="product-line-grid-right text-center product-line-actions col-md-4">
+                                                        <div class="row">
+                                                            <div class="col-md-5 col qty">
+                                                                <form action="{% url 'cart_add' product.id %}" method="post">
+                                                                    <div class="label">Qty:</div>
+                                                                    <div class="quantity">
+                                                                        <input type="text" name="quantity" value="{{item.quantity}}" class="input-group form-control">
+
+                                                                        <span class="input-group-btn-vertical">
+                                                                            <button class="btn btn-touchspin js-touchspin bootstrap-touchspin-up" type="button">
+                                                                                +
+                                                                            </button>
+                                                                            <button class="btn btn-touchspin js-touchspin bootstrap-touchspin-down" type="button">
+                                                                                -
+                                                                            </button>
+                                                                        </span>
+                                                                    </div>
+                                                                    {% csrf_token %}
+                                                                    {{item.update_quantity_form.quantity}}
+                                                                    {{item.update_quantity_form.update}}
+                                                                    <input type="submit" value="Update" class="btn btn-info mt-2">
+                                                                </form>
+                                                            </div>
+                                                            <div class="col-md-5 col price">
+                                                                <div class="label">Total:</div>
+                                                                <div class="product-price total">
+                                                                    Rp. {{item.total_price|intcomma}}
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2 col text-xs-right align-self-end">
+                                                                <div class="cart-line-product-actions ">
+                                                                    <a class="remove-from-cart" rel="nofollow" href="{% url 'cart_remove' product.id %}" data-link-action="delete-from-cart" data-id-product="1">
+                                                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            {% endwith %}
+                                            {% empty %}
+                                            <li class="cart-item">
+                                                <div class="product-line-grid row justify-content-between">
+                                                    Belum ada pemesanan!
+                                                </div>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                                <a href="{% url 'checkout' %}" class="continue btn btn-primary pull-xs-right">
+                                    Checkout
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      const incrementButtons = document.querySelectorAll('.bootstrap-touchspin-up');
+      const decrementButtons = document.querySelectorAll('.bootstrap-touchspin-down');
+  
+      incrementButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          const input = e.target.closest('.quantity').querySelector('input[name="quantity"]');
+          let value = parseInt(input.value, 10);
+          value = isNaN(value) ? 0 : value;
+          input.value = value + 1;
+        });
+      });
+  
+      decrementButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          const input = e.target.closest('.quantity').querySelector('input[name="quantity"]');
+          let value = parseInt(input.value, 10);
+          value = isNaN(value) ? 0 : value;
+          if (value > 1) {
+            input.value = value - 1;
+          }
+        });
+      });
+    });
+  </script>
+
+{% endblock content %}

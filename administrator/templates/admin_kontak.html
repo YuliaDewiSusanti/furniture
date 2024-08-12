@@ -1,0 +1,69 @@
+{% extends 'layouts/main.html' %}
+{% block content %}
+<div class="col-lg-12 col-12 mt-3">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Kontak List</h4>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nama</th>
+                        <th>No Whatsapp</th>
+                        <th>Alamat</th>
+                        <th>Email</th>
+                        <th>Tanggal Dibuat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for kontak in data %}
+                    <tr>
+                        <td>{{ kontak.nama }}</td>
+                        <td>{{ kontak.telpon }}</td>
+                        <td>{{ kontak.subjek }}</td>
+                        <td>{{ kontak.email }}</td>
+                        <td>{{ kontak.isi }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center mt-3">
+        <nav>
+            <ul class="pagination">
+                {% if data.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1" aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ data.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+                <li class="page-item">
+                    <span class="page-link">
+                        Page {{ data.number }} of {{ data.paginator.num_pages }}
+                    </span>
+                </li>
+                {% if data.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ data.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ data.paginator.num_pages }}" aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock content %}
+

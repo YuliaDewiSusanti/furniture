@@ -1,0 +1,76 @@
+{% extends 'layouts/main.html' %}
+{% block content %}
+<div class="col-lg-12 col-12 mt-3">
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="card-title">Transaksi List</h4>
+                <a href="{% url 'export_transaksi_xlsx' %}" class="btn btn-primary">Export as Excel</a>
+                <!-- Export Button -->
+            </div>
+            <table class="table table-striped mt-3">
+                <thead>
+                    <tr>
+                        <th>No Transaksi</th>
+                        <th>Nama Lengkap</th>
+                        <th>Alamat</th>
+                        <th>Email</th>
+                        <th>WhatsApp</th>
+                        <th>Total Transaksi</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaksi in data %}
+                    <tr>
+                        <td>{{ transaksi.no_transaksi }}</td>
+                        <td>{{ transaksi.nama_depan }} {{ transaksi.nama_belakang }}</td>
+                        <td>{{ transaksi.alamat }}</td>
+                        <td>{{ transaksi.email }}</td>
+                        <td>{{ transaksi.whatsapp }}</td>
+                        <td>{{ transaksi.total_transaksi }}</td>
+                        <td>{{ transaksi.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center mt-3">
+        <nav>
+            <ul class="pagination">
+                {% if data.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1" aria-label="First">
+                        <span aria-hidden="true">&laquo;&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ data.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+                <li class="page-item">
+                    <span class="page-link">
+                        Page {{ data.number }} of {{ data.paginator.num_pages }}
+                    </span>
+                </li>
+                {% if data.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ data.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ data.paginator.num_pages }}" aria-label="Last">
+                        <span aria-hidden="true">&raquo;&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock content %}

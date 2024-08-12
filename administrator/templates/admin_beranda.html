@@ -1,0 +1,76 @@
+{% extends 'layouts/main.html' %} {% block content %}
+<div class="col-lg-3 col-6 mt-3">
+  <!-- small box -->
+  <div class="small-box bg-info">
+    <div class="inner">
+      <h3>{{ jmlKategori }}</h3>
+
+      <p>Kategori</p>
+    </div>
+    <div class="icon">
+      <i class="ion ion-bag"></i>
+    </div>
+  </div>
+</div>
+<!-- ./col -->
+<div class="col-lg-3 col-6 mt-3">
+  <!-- small box -->
+  <div class="small-box bg-success">
+    <div class="inner">
+      <h3>{{ jmlCustumer }}</h3>
+
+      <p>Pelanggan</p>
+    </div>
+    <div class="icon">
+      <i class="ion ion-person-add"></i>
+    </div>
+  </div>
+</div>
+<!-- ./col -->
+<div class="col-lg-3 col-6 mt-3">
+  <!-- small box -->
+  <div class="small-box bg-warning">
+    <div class="inner">
+      <h3>{{ jmlProduk }}</h3>
+
+      <p>Produk</p>
+    </div>
+    <div class="icon">
+      <i class="ion ion-ios-cart-outline"></i>
+    </div>
+  </div>
+</div>
+<!-- ./col -->
+<div class="col-lg-3 col-6 mt-3">
+  <!-- small box -->
+  <div class="small-box bg-danger">
+    <div class="inner">
+      <h3>{{ jmlTransaksi }}</h3>
+
+      <p>Transaksi</p>
+    </div>
+    <div class="icon">
+      <i class="ion ion-pie-graph"></i>
+    </div>
+  </div>
+</div>
+
+<div class="col-lg-12 col-12 mt-2">
+  <div class="card">
+      <div class="card-body">
+          <h4 class="card-title">Informasi Halaman Beranda</h4>
+          <p class="card-text">Tanggal: {{ current_date }}</p>
+          <p class="card-text">Penggunaan Website: {{ website_usage }}</p>
+          <h5>Penjelasan Menu</h5>
+          <ul>
+              <li>Beranda: Penjelasan tentang halaman utama</li>
+              <li>Produk: Informasi tentang produk yang tersedia</li>
+              <li>Konsumen: Data dan informasi konsumen</li>
+              <li>Transaksi: Detil transaksi yang dilakukan</li>
+              <li>Hubungi Kami: Cara untuk menghubungi admin atau support</li>
+          </ul>
+      </div>
+  </div>
+</div>
+
+{% endblock content %}

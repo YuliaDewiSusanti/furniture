@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+{% load humanize %}
+
+<div id="checkout" class="main-content">
+  <div class="wrap-banner">
+    <nav class="breadcrumb-bg">
+      <div class="container no-index">
+        <div class="breadcrumb">
+          <ol>
+            <li>
+              <a href="#">
+                <span>Beranda</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <span>Checkout</span>
+              </a>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </nav>
+    <div id="wrapper-site">
+      <div class="container">
+        <div class="row">
+          <div id="content-wrapper" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 onecol">
+            <div id="main">
+              <div class="cart-grid row">
+                <div class="col-md-8 check-info">
+                  <div class="checkout-personal-step">
+                    <h3 class="step-title h3 info">
+                      <span class="step-number">#</span>INFORMASI PRIBADI
+                    </h3>
+                  </div>
+                  <div class="content">
+                    <div class="tab-content">
+                      <div class="tab-pane fade in active show" id="checkout-guest-form" role="tabpanel">
+                        <form
+                          action="{% url 'checkout' %}"
+                          id="customer-form"
+                          class="js-customer-form"
+                          method="post"
+                          onsubmit="return alert('Selamat pesanan anda telah berhasil terkirim!')"
+                        >
+                          {% csrf_token %}
+                          <div>
+                            <input type="hidden" name="grantotal" value="{{keranjang.get_total_price}}" />
+                            <div class="form-group row">
+                              <div class="col-6">
+                                <input class="form-control" name="nama_depan" type="text" placeholder="Nama Depan" required />
+                              </div>
+                              <div class="col-6">
+                                <input class="form-control" name="nama_belakang" type="text" placeholder="Nama Belakang" required />
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <div class="col-6">
+                                <input class="form-control" name="provinsi" type="text" placeholder="Provinsi" required />
+                              </div>
+                              <div class="col-6">
+                                <input class="form-control" name="kabupaten" type="text" placeholder="Kabupaten" required />
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <div class="col-6">
+                                <input class="form-control" name="kecamatan" type="text" placeholder="Kecamatan" required />
+                              </div>
+                              <div class="col-6">
+                                <input class="form-control" name="kode_pos" type="text" placeholder="Kode Pos" required />
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <div class="col-12">
+                                <textarea name="alamat" class="form-control" rows="3" placeholder="Alamat" required></textarea>
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <div class="col-6">
+                                <input class="form-control" name="email" type="email" placeholder="Alamat Email" required />
+                              </div>
+                              <div class="col-6">
+                                <input class="form-control" name="telpon" type="number" placeholder="Telepon" required />
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <div class="col-12">
+                                <input type="submit" class="continue btn btn-primary pull-xs-right" value="Kirim Pesanan" />
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-12 col-lg-4" style="margin-top: 3.75rem">
+                  {% for item in keranjang %} 
+                  {% with product=item.product %}
+                  <div class="card bg-light">
+                    <div class="card-header">
+                      <div class="card-title text-center">
+                        <h3>{{product.nama_produk}}</h3>
+                      </div>
+                      <hr />
+                      <div class="card-body" style="margin-top: -20px">
+                        <div class="row">
+                          <div class="col">
+                            <div>Total products :</div>
+                          </div>
+                          <div class="col">
+                            <b>Rp. {{item.price|intcomma}}</b>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <div>Total Shipping :</div>
+                          </div>
+                          <div class="col">
+                            <b>{{item.quantity}} Buah</b>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <div>Total Tagihan :</div>
+                          </div>
+                          <div class="col">
+                            <b>Rp. {{item.total_price|intcomma}}</b>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endwith %}
+                  {% empty %}
+                  <div class="cart-summary">
+                    <div class="cart-detailed-totals">Belum ada pemesanan</div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById('customer-form').onsubmit = function(event) {
+      event.preventDefault(); // Prevent default form submission
+  
+      var formData = new FormData(this);
+  
+      fetch(this.action, {
+          method: 'POST',
+          body: formData,
+          headers: {
+              'X-CSRFToken': '{{ csrf_token }}',
+          },
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.payment_url) {
+              window.open(data.payment_url, '_blank'); // Open in a new tab
+              // Optional: Redirect to homepage after payment
+              setTimeout(() => {
+                  window.location.href = '/'; // Redirect to homepage
+              }, 1000);
+          } else if (data.error) {
+              alert('Error: ' + data.error);
+              console.error('Error:', data.error);
+          }
+      })
+      .catch(error => {
+          alert('An error occurred: ' + error.message);
+          console.error('An error occurred:', error);
+      });
+  
+      // Gather product information
+      var products = [];
+      document.querySelectorAll('.card').forEach(function(card) {
+          var productName = card.querySelector('.card-title h3').textContent;
+          var productPrice = card.querySelector('.card-body .row:nth-child(1) .col:nth-child(2) b').textContent;
+          var productQuantity = card.querySelector('.card-body .row:nth-child(2) .col:nth-child(2) b').textContent;
+          var productTotal = card.querySelector('.card-body .row:nth-child(3) .col:nth-child(2) b').textContent;
+          products.push(`- *${productName}*\n  - Harga: ${productPrice}\n  - Jumlah: ${productQuantity}\n  - Total: ${productTotal}`);
+      });
+  
+      // Create message for Telegram bot
+      var message = `
+  *Informasi Pesanan*
+  - Nama Depan: *${formData.get('nama_depan')}*
+  - Nama Belakang: *${formData.get('nama_belakang')}*
+  - Provinsi: *${formData.get('provinsi')}*
+  - Kabupaten: *${formData.get('kabupaten')}*
+  - Kecamatan: *${formData.get('kecamatan')}*
+  - Kode Pos: *${formData.get('kode_pos')}*
+  - Alamat: *${formData.get('alamat')}*
+  - Email: *${formData.get('email')}*
+  - Telepon: *${formData.get('telpon')}*
+  - Total: *Rp. ${formData.get('grantotal')}*
+  
+  *Produk:*
+  ${products.join('\n')}
+      `;
+  
+      var telegramApiUrl = `https://api.telegram.org/bot${'7161947259:AAEuGyrNIxEk0PnKnVvszGOFfiz_50kvqbQ'}/sendMessage?chat_id=${'1358658662'}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
+  
+      fetch(telegramApiUrl)
+          .then(response => response.json())
+          .then(data => {
+              if (!data.ok) {
+                  alert('Failed to send message to Telegram bot.');
+                  console.error('Telegram error:', data);
+              }
+          })
+          .catch(error => {
+              alert('An error occurred while sending message to Telegram bot: ' + error.message);
+              console.error('Telegram error:', error);
+          });
+  };
+  </script>
+  
+{% endblock content %}

@@ -1,0 +1,70 @@
+{% extends 'layouts/main.html' %}
+
+{% block content %}
+<div class="col-lg-12 col-12 mt-3">
+    <h1>{% if form.instance.pk %}Edit Product{% else %}Add New Product{% endif %}</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="id_kategori">Category</label>
+                    {{ form.kategori }}
+                </div>
+                <div class="form-group">
+                    <label for="id_nama_produk">Product Name</label>
+                    {{ form.nama_produk }}
+                </div>
+                <div class="form-group">
+                    <label for="id_gambar">Image</label>
+                    {{ form.gambar }}
+                </div>
+                <div class="form-group">
+                    <label for="id_warna">Color</label>
+                    {{ form.warna }}
+                </div>
+                <div class="form-group">
+                    <label for="id_bahan">Material</label>
+                    {{ form.bahan }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="id_keterangan">Description</label>
+                    {{ form.keterangan }}
+                </div>
+                <div class="form-group">
+                    <label for="id_harga">Price</label>
+                    {{ form.harga }}
+                </div>
+                <div class="form-group">
+                    <label for="id_no_whatsup">Contact Number</label>
+                    {{ form.no_whatsup }}
+                </div>
+                <div class="form-group">
+                    <label for="id_diskon">Discount</label>
+                    {{ form.diskon }}
+                </div>
+                <div class="form-group">
+                    <label for="id_keterangan_barang">Condition</label>
+                    {{ form.keterangan_barang }}
+                </div>
+                <div class="form-group">
+                    <label for="id_ukuran">Size</label>
+                    {{ form.ukuran }}
+                </div>
+                <div class="form-group">
+                    <label for="id_unit_ukuran">Size Unit</label>
+                    {{ form.unit_ukuran }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a href="{% url 'produk_admin' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock content %}
